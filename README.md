@@ -37,24 +37,59 @@ Project ini dibuat untuk kebutuhan UI/UX dan prototyping frontend. Tombol downlo
 ```txt
 src/
   app/
-    api/preview/route.ts # Mock backend placeholder endpoint
-    globals.css        # Tailwind entry and global visual styles
-    layout.tsx         # SEO metadata, viewport, root layout
-    page.tsx           # Home composition
-    error.tsx          # Client error boundary UI
-    not-found.tsx      # 404 page
+    api/
+      download/route.ts # Mock downloadable file endpoint
+      preview/route.ts  # Mock preview endpoint
+    globals.css         # Tailwind entry and global visual styles
+    layout.tsx          # SEO metadata, theme provider, root layout
+    page.tsx            # Home composition
+    error.tsx           # Client error boundary UI
+    not-found.tsx       # 404 page
   components/
     footer.tsx
-    media-dashboard.tsx
+    media-dashboard.tsx # Main downloader flow UI
     navbar.tsx
+    theme-provider.tsx
+    theme-toggle.tsx
     toast.tsx
+  hooks/
+    use-mounted.ts      # Hydration-safe mounted state helper
   lib/
-    platform.ts        # URL validation, platform detection, mock preview factory
+    download-file.ts    # Browser blob download helpers
+    platform.ts         # URL validation, platform detection, mock preview factory
   store/
-    use-media-store.ts # Zustand store + localStorage persistence
+    use-media-store.ts  # Zustand store + localStorage persistence
   types/
-    media.ts           # Shared TypeScript types
+    media.ts            # Shared TypeScript types
 ```
+
+## Supported URL Detection
+
+Detector membaca hostname URL agar lebih akurat dan menghindari false-positive dari path/query string.
+
+Contoh yang didukung:
+
+- `https://youtube.com/watch?v=...`
+- `https://www.youtube.com/shorts/...`
+- `https://youtu.be/...`
+- `https://tiktok.com/@user/video/...`
+- `https://www.tiktok.com/@user/video/...`
+- `https://vt.tiktok.com/...`
+- `https://spotify.com/...`
+- `https://open.spotify.com/track/...`
+
+URL valid dengan platform lain akan mendapat fallback `Unknown` dan tombol download dinonaktifkan.
+
+## Mock Download Flow
+
+1. User paste URL.
+2. Client memvalidasi URL dan auto-detect platform.
+3. Client memanggil `/api/preview` untuk mendapatkan metadata mock.
+4. UI menampilkan skeleton loading, preview card, dan opsi format download.
+5. User memilih `video`, `audio`, atau `thumbnail`.
+6. Client memanggil `/api/download`.
+7. API mengembalikan file mock legal dengan header `Content-Disposition`.
+8. Browser mengunduh blob file dan history tersimpan di localStorage.
 
 ## Getting Started
 
@@ -92,6 +127,14 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Quality Checks
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
 ### Production Build
 
 ```bash
@@ -101,37 +144,20 @@ npm run start
 
 ## Vercel Deployment
 
-1. Push this repository to GitHub/GitLab/Bitbucket.
-2. Import the repository in Vercel.
-3. Set `NEXT_PUBLIC_APP_URL` to your deployed URL.
-4. Use the default Vercel settings for Next.js.
-5. Deploy.
+1. Push repository ke GitHub/GitLab/Bitbucket.
+2. Import repository di Vercel.
+3. Pastikan framework preset adalah **Next.js**.
+4. Set environment variable `NEXT_PUBLIC_APP_URL` ke URL production Vercel.
+5. Deploy dengan default Vercel build command: `npm run build`.
 
 No custom server is required.
 
-## Mock Flow
-
-1. User pastes a TikTok, YouTube, or Spotify URL.
-2. The client posts to `/api/preview`, a mock backend placeholder endpoint.
-3. `detectPlatform()` checks the hostname pattern.
-4. `createMockPreview()` simulates a short backend delay.
-5. The UI renders a preview card with mock metadata.
-6. Selecting video/audio/thumbnail writes a local mock history item to localStorage.
-
-## Quality Checks
-
-```bash
-npm run lint
-npm run typecheck
-npm run build
-```
-
-
 ## Future Backend Integration
 
-If you add a real backend later, ensure it:
+Jika nanti menambahkan backend sungguhan, pastikan backend tersebut:
 
-- Respects platform terms of service.
-- Does not bypass DRM, authentication, paywalls, or technical protection measures.
-- Validates user authorization and content rights.
-- Provides transparent error states for unsupported URLs.
+- Mematuhi terms of service platform.
+- Tidak bypass DRM, authentication, paywalls, atau technical protection measures.
+- Memvalidasi hak pengguna terhadap konten.
+- Menyediakan transparent error state untuk URL yang tidak didukung.
+- Menyimpan audit/log sesuai kebutuhan compliance.

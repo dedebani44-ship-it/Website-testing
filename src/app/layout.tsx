@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -42,9 +43,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="id" className="dark">
-      <body className={`${inter.variable} bg-noise-gradient font-sans antialiased`}>
-        {children}
+    <html lang="id" suppressHydrationWarning>
+      <body className={`${inter.variable} min-h-screen bg-slate-50 font-sans text-slate-950 antialiased transition-colors dark:bg-obsidian dark:text-white`}>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

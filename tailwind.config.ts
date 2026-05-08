@@ -15,7 +15,7 @@ const config: Config = {
       },
       boxShadow: {
         glow: '0 0 70px rgba(139, 92, 246, 0.35)',
-        glass: 'inset 0 1px 0 rgba(255,255,255,0.18), 0 24px 80px rgba(0,0,0,0.35)',
+        glass: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 24px 80px rgba(15,23,42,0.14)',
       },
       backgroundImage: {
         'noise-gradient': 'radial-gradient(circle at top left, rgba(34, 211, 238, 0.24), transparent 36%), radial-gradient(circle at top right, rgba(139, 92, 246, 0.26), transparent 38%), linear-gradient(135deg, #070812 0%, #101225 45%, #080914 100%)',
@@ -29,10 +29,15 @@ const config: Config = {
           '0%': { backgroundPosition: '-700px 0' },
           '100%': { backgroundPosition: '700px 0' },
         },
+        glowPulse: {
+          '0%, 100%': { opacity: '0.45', transform: 'scale(1)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.04)' },
+        },
       },
       animation: {
         float: 'float 7s ease-in-out infinite',
         shimmer: 'shimmer 2.2s linear infinite',
+        'glow-pulse': 'glowPulse 6s ease-in-out infinite',
       },
     },
   },

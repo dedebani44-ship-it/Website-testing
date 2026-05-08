@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+  background: #f8fafc;
+}
+
+html.dark {
   color-scheme: dark;
   background: #070812;
 }
@@ -13,23 +18,39 @@
 
 html {
   scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   min-height: 100vh;
-  background: #070812;
-  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
   background: rgba(34, 211, 238, 0.35);
+  color: #0f172a;
+}
+
+.dark ::selection {
   color: #ffffff;
 }
 
 .glass-grid {
   background-image:
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black, transparent 86%);
+}
+
+.dark .glass-grid {
+  background-image:
     linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
 }

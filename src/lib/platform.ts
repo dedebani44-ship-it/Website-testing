@@ -1,9 +1,9 @@
 import type { DownloadType, MediaPreview, Platform } from '@/types/media';
 
-const platformPatterns: Record<Exclude<Platform, 'Unknown'>, RegExp[]> = {
-  TikTok: [/tiktok\.com/i, /vm\.tiktok\.com/i],
-  YouTube: [/youtube\.com/i, /youtu\.be/i],
-  Spotify: [/spotify\.com/i, /open\.spotify\.com/i],
+const platformHostPatterns: Record<Exclude<Platform, 'Unknown'>, RegExp[]> = {
+  TikTok: [/(^|\.)tiktok\.com$/],
+  YouTube: [/(^|\.)youtube\.com$/, /^youtu\.be$/],
+  Spotify: [/(^|\.)spotify\.com$/],
 };
 
 const platformCopy: Record<Platform, Pick<MediaPreview, 'title' | 'creator' | 'duration' | 'thumbnail' | 'accent' | 'description'>> = {
@@ -47,13 +47,18 @@ export const downloadOptions: Array<{ type: DownloadType; label: string; helper:
   { type: 'thumbnail', label: 'Thumbnail', helper: 'Mock image option' },
 ];
 
-export function detectPlatform(url: string): Platform {
-  const normalized = url.trim();
+export function detectPlatform(value: string): Platform {
+  try {
+    const url = new URL(value.trim());
+    const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
 
-  for (const [platform, patterns] of Object.entries(platformPatterns) as Array<[Exclude<Platform, 'Unknown'>, RegExp[]]>) {
-    if (patterns.some((pattern) => pattern.test(normalized))) {
-      return platform;
+    for (const [platform, patterns] of Object.entries(platformHostPatterns) as Array<[Exclude<Platform, 'Unknown'>, RegExp[]]>) {
+      if (patterns.some((pattern) => pattern.test(hostname))) {
+        return platform;
+      }
     }
+  } catch {
+    return 'Unknown';
   }
 
   return 'Unknown';
@@ -61,8 +66,8 @@ export function detectPlatform(url: string): Platform {
 
 export function isValidUrl(value: string): boolean {
   try {
-    const url = new URL(value);
-    return ['http:', 'https:'].includes(url.protocol);
+    const url = new URL(value.trim());
+    return ['http:', 'https:'].includes(url.protocol) && Boolean(url.hostname);
   } catch {
     return false;
   }
@@ -75,7 +80,7 @@ export async function createMockPreview(url: string): Promise<MediaPreview> {
   const copy = platformCopy[platform];
 
   return {
-    id: crypto.randomUUID(),
+    id: globalThis.crypto?.randomUUID?.() ?? `${platform.toLowerCase()}-${Date.now()}`,
     url,
     platform,
     createdAt: new Date().toISOString(),
