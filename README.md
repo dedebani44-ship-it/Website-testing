@@ -1,26 +1,26 @@
 # GlassFetch — Modern Media Downloader Mock UI
 
-GlassFetch adalah web app frontend modern berbasis **Next.js 15 + TypeScript + Tailwind CSS** untuk mendemonstrasikan alur preview media dan pilihan download secara aman. Aplikasi ini menggunakan **mock API/backend placeholder** dan **tidak** mengimplementasikan bypass DRM, scraping, login wall, paywall, atau proteksi platform apa pun.
+GlassFetch adalah web app frontend modern berbasis **Next.js 15 + TypeScript + Tailwind CSS** untuk mendemonstrasikan alur preview media dan pilihan download secara aman. Aplikasi ini menggunakan **mock API/backend placeholder** dan **tidak** mengimplementasikan bypass DRM, login wall, paywall, atau proteksi platform apa pun.
 
 ## Highlights
 
-- ✨ Premium glassmorphism dengan dark/light mode yang tersimpan di localStorage via `next-themes`
-- 📱 Mobile-first responsive layout yang nyaman untuk Android Chrome dan desktop
-- 🔎 Input URL dengan auto-detect platform: TikTok, YouTube, Spotify, dan fallback `Unknown`
-- 🖼️ Card preview media berbasis mock data dan skeleton loading
+- ✨ Premium glassmorphism + modern dark UI
+- 📱 Mobile-first responsive layout untuk mobile dan desktop
+- 🔎 Input URL dengan auto-detect platform: TikTok, YouTube, Spotify
+- 🖼️ Card preview media berbasis mock data
 - ⬇️ Download options UI: video, audio, thumbnail
-- ✅ Tombol download benar-benar memanggil `/api/download` dan mengunduh file mock legal
-- 🌀 Smooth animation dengan Framer Motion, animated glow, dan shimmer skeleton
-- 🔔 Toast notification untuk success, error, dan info state
+- 🌀 Animated loading state dengan Framer Motion
+- 🔔 Toast notification
 - 🧠 Download history tersimpan di localStorage via Zustand persist
 - 🧭 Responsive navbar + footer
+- 🌙 Dark mode by default
 - 🧱 Production-ready App Router structure
 - 🧩 SEO metadata, not-found page, dan error boundary
 - 🚀 Deploy-ready untuk Vercel
 
 ## Compliance Notice
 
-Project ini dibuat untuk kebutuhan UI/UX dan prototyping frontend. Endpoint download hanya menghasilkan file placeholder mock. Jangan gunakan project ini untuk mengambil konten tanpa izin, melanggar hak cipta, atau melewati DRM/proteksi platform.
+Project ini dibuat untuk kebutuhan UI/UX dan prototyping frontend. Tombol download hanya menyimpan opsi mock ke localStorage. Jangan gunakan project ini untuk mengambil konten tanpa izin, melanggar hak cipta, atau melewati DRM/proteksi platform.
 
 ## Tech Stack
 
@@ -29,7 +29,6 @@ Project ini dibuat untuk kebutuhan UI/UX dan prototyping frontend. Endpoint down
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
 - [Lucide React](https://lucide.dev/)
 - [Zustand](https://zustand-demo.pmnd.rs/)
 
