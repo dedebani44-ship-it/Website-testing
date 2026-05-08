@@ -47,16 +47,74 @@ export const downloadOptions: Array<{ type: DownloadType; label: string; helper:
   { type: 'thumbnail', label: 'Thumbnail', helper: 'Mock image option' },
 ];
 
+export type Platform =
+  | "youtube"
+  | "tiktok"
+  | "spotify"
+  | "direct"
+  | "unknown";
+
 export function detectPlatform(url: string): Platform {
-  const normalized = url.trim();
+  try {
+    const lower = url.toLowerCase();
 
-  for (const [platform, patterns] of Object.entries(platformPatterns) as Array<[Exclude<Platform, 'Unknown'>, RegExp[]]>) {
-    if (patterns.some((pattern) => pattern.test(normalized))) {
-      return platform;
+    // YouTube
+    if (
+      lower.includes("youtube.com") ||
+      lower.includes("youtu.be")
+    ) {
+      return "youtube";
     }
-  }
 
-  return 'Unknown';
+    // TikTok
+    if (
+      lower.includes("tiktok.com") ||
+      lower.includes("vt.tiktok.com") ||
+      lower.includes("vm.tiktok.com")
+    ) {
+      return "tiktok";
+    }
+
+    // Spotify
+    if (
+      lower.includes("spotify.com") ||
+      lower.includes("open.spotify.com")
+    ) {
+      return "spotify";
+    }
+
+    // Direct file
+    if (
+      lower.match(
+        /\.(mp4|mp3|wav|jpg|jpeg|png|gif|pdf|zip)$/i
+      )
+    ) {
+      return "direct";
+    }
+
+    return "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
+export function getPlatformLabel(platform: Platform) {
+  switch (platform) {
+    case "youtube":
+      return "YouTube";
+
+    case "tiktok":
+      return "TikTok";
+
+    case "spotify":
+      return "Spotify";
+
+    case "direct":
+      return "Direct File";
+
+    default:
+      return "Unknown";
+  }
 }
 
 export function isValidUrl(value: string): boolean {
@@ -68,17 +126,13 @@ export function isValidUrl(value: string): boolean {
   }
 }
 
-export async function createMockPreview(url: string): Promise<MediaPreview> {
-  await new Promise((resolve) => setTimeout(resolve, 900));
-
-  const platform = detectPlatform(url);
-  const copy = platformCopy[platform];
-
+export function createMockPreview(platform: string, url: string) {
   return {
-    id: crypto.randomUUID(),
+    title: "Preview unavailable",
+    author: "Unknown",
+    thumbnail: "",
+    duration: "--:--",
     url,
     platform,
-    createdAt: new Date().toISOString(),
-    ...copy,
   };
 }
